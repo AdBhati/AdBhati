@@ -1,0 +1,66 @@
+//VF PAGE 
+<apex:page controller="Picklist">
+
+  <apex:form>
+      <apex:pageBlock>
+          <b> Object List</b>
+          <apex:pageBlockSection >
+              <apex:actionFunction action="{!fillWrapper}" name="acFun"/>
+              <apex:selectList size="1" value="{!selectObject}" onchange="acFun();">
+                  <apex:selectOptions value="{!Options}"></apex:selectOptions>
+              </apex:selectList>
+          </apex:pageBlockSection>
+      </apex:pageBlock>
+
+
+
+// APEX CONTROLLER PAGE
+public class Copy_vf {
+public String selectObject{get;set;}
+}
+
+Public List<SelectOption> getOptions()
+  {
+      List<SelectOption> select_obj = new list<SelectOption>();
+      select_obj.add(new SelectOption('-None-','-None-'));
+      select_obj.add(new SelectOption('Account','Account'));
+      select_obj.add(new SelectOption('Contact','Contact'));
+      select_obj.add(new SelectOption('Opportunity','Opportunity'));
+      return select_obj;   
+  }
+
+ public void fillWrapper(){			// To show the records after selecting from list 
+
+      showsecondBlock=true;
+      contactList = new List<WrapperContact>();
+      parentId = new Set<Id>();
+      if(selectObject == 'Account'){
+          for(Account accRec: [Select id from Account]){
+              parentId.add(accRec.id);
+          }
+      }
+      else if(selectObject == 'Contact'){
+          for(Contact conRec:[Select id from Contact]){
+              parentId.add(conRec.id);
+          }
+      }
+      else if(selectObject == 'Opportunity'){
+          for(Opportunity oppRec:[Select id from Opportunity]){
+              parentId.add(oppRec.id);
+          }
+      }
+      if(parentId.size() > 0){
+          Integer index = 1;
+          For(Attachment attachments : [select id, Name, ContentType, Body from Attachment WHERE ParentId IN : parentId]){
+              WrapperContact wrap = new WrapperContact();
+              wrap.sno = index;
+              wrap.name = attachments.Name;
+              wrap.contentType = attachments.ContentType;
+              wrap.Body = attachments.Body;
+              wrap.attachmentURL = '/servlet/servlet.FileDownload?file=' + attachments.Id;
+              contactList.add(wrap);
+              index++;
+
+          }
+      }
+  }
