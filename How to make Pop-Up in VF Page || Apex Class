@@ -1,0 +1,58 @@
+// VF PAGE
+
+<apex:pageBlock>
+<apex:outputPanel styleClass="custPopup" layout="block" rendered="{!showPopup}"> 
+          <apex:pageBlock>
+              <apex:pageBlockSection>
+                  <apex:pageBlockSectionItem >
+                      <big><strong>Content</strong></big>
+                  </apex:pageBlockSectionItem>
+                  <apex:pageBlockSectionItem >
+                      <apex:commandButton value="Close" action="{!closepupupMethod}" styleClass="closeButton;modal-open"/>
+                  </apex:pageBlockSectionItem>
+              </apex:pageBlockSection>
+      </apex:outputPanel> 
+      </apex:pageBlock>
+   
+   
+   // APEX CLASS
+   public void showPopupMethod() {
+        showPopup = true;
+        bgdisable=false;
+    }
+    
+    public void closepupupMethod() {
+        showPopup = false;
+        bgdisable=true;
+    }
+  
+   
+      
+// CSS FILE
+<style type="text/css">
+        .custPopup{
+        background-color: grey ;
+        border-style: solid;
+        border-width: 8px;
+        
+        padding: 0px;
+        position: absolute;
+        right: 25%;
+        top: 10%;
+        width: 600px;
+        height: 520px;
+        z-index: 9999;
+        }
+        .closeButton {
+        float: right;
+        }
+        .fullscreen-container {
+        display: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 70;
+        background: rgba(90, 90, 90, 0.5);
+        z-index: 9999;
+        }
